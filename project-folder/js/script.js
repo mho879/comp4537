@@ -1,14 +1,23 @@
-// const gameWindow = document.getElementById("gameWindow")
-const goButton = document.getElementById("goButton")
+/*
+    Marco Ho (Set T)
+    A01338160
+
+    The following code was generated using ChatGPT:
+    - code within method Game.generateRandomColor()
+*/
 
 // Define button class for the N buttons being generated on the screen
 class Button {
     constructor(number, color) {
         this.number = number;
         this.color = color;
+        this.id = `button${this.number}`;
+        // this.elementReference = document.createElement("button");
     }
-    move() {
-        // code for moving the object
+    moveButton() {
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
+        document.getElementById(`${this.id}`).style.transform = `translate(${Math.floor(Math.random() * windowWidth)}px, ${Math.floor(Math.random() * windowHeight)}px)`;
     }
 }
 
@@ -24,12 +33,17 @@ class Game {
     constructor(numberOfButtons) {
         this.gameWindow = this.updateWindowDimensions
         this.gameButtons = [];
-        for (let i = 0; i < numberOfButtons; i++) {
-            this.gameButtons.push(new Button(i + 1, this.generateRandomColor()))
-        }
-        setTimeout(() => {this.renderButtons()}, numberOfButtons * 1000);
-        setTimeout(this.renderButtons.bind(this), numberOfButtons * 1000);
-    }
+        this.init(numberOfButtons);
+        // setTimeout(() => {
+        //     this.renderButtons.bind(this)
+
+        //     setTimeout(() => {
+                // this.gameButtons.forEach((button) => {
+                //     button.moveButton();
+                // }
+        //     )}, 5000);
+        // }, numberOfButtons * 1000);
+    } 
 
     /**
      * Generates a random hexadecimal color string
@@ -45,9 +59,24 @@ class Game {
     }
 
     /**
-     * Moves buttons
+     * Moves button
      */
-    moveButtons() {
+    moveButtons(buttonToMove) {
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
+
+        // Get the root font size (usually from the <html> or <body> tag)
+        let rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+        // Get the button's width and height in em from its computed style
+        let buttonWidthEm = parseFloat(getComputedStyle(buttonToMove).width);
+        let buttonHeightEm = parseFloat(getComputedStyle(buttonToMove).height);
+
+        // Convert button dimensions from em to px
+        let buttonWidthPx = buttonWidthEm * rootFontSize;
+        let buttonHeightPx = buttonHeightEm * rootFontSize;
+        buttonToMove.style.left = Math.floor(Math.random() * (windowWidth - buttonWidthPx)) + 'px';
+        buttonToMove.style.top = Math.floor(Math.random() * (windowHeight - buttonHeightPx)) + 'px';
 
     }
 
@@ -59,16 +88,41 @@ class Game {
     }
 
     /**
-     * Render custom button on DOM
+     * Render buttons on DOM
+     * Loops through array gameButtons and creates a button element for each
      */
     renderButtons() {
         const buttonContainer = document.getElementById("buttonContainer");
-        for (let i = 0; i < this.gameButtons.length; i++) {
-            let customButton = document.createElement("button");
-            customButton.className += "customButton";
-            customButton.style.background = this.gameButtons[i].color;
-            customButton.innerText = `${i + 1}`
-            buttonContainer.appendChild(customButton);
+        this.gameButtons.forEach((currentButton) => {
+            currentButton.elementReference = document.createElement("button");
+            currentButton.elementReference.className += "customButton";
+            currentButton.elementReference.style.background = currentButton.color;
+            currentButton.elementReference.innerText = currentButton.number;
+            currentButton.elementReference.id = currentButton.id
+            buttonContainer.appendChild(currentButton.elementReference);
+        });
+    }
+
+    wait(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    async init(numberOfButtons) {
+        for (let i = 0; i < numberOfButtons; i++) {
+            this.gameButtons.push(new Button(i + 1, this.generateRandomColor()))
+        }
+        await this.wait(numberOfButtons * 1000);
+        this.renderButtons();
+        for (let j = 0; j < numberOfButtons; j++) {
+            await this.wait(2000);
+            if (j == 0) {
+                this.gameButtons.forEach((button) => {
+                    document.getElementById(`${button.id}`).style.position = 'absolute';
+                });
+            }
+            this.gameButtons.forEach((button) => {
+                button.moveButton();
+            });
         }
     }
 }
@@ -80,6 +134,7 @@ class Message {
     }
 }
 
-goButton.addEventListener("click", () => {
-    const myGame = new Game(document.getElementById("buttonCount").value);
+
+document.getElementById("goButton").addEventListener("click", () => {
+    new Game(document.getElementById("buttonCount").value);
 });
