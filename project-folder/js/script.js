@@ -2,8 +2,9 @@
     Marco Ho (Set T)
     A01338160
 
-    The following code was generated using ChatGPT:
-    - code within method Game.generateRandomColor()
+    The following code was generated with the help of ChatGPT:
+    - Game.generateRandomColor()
+    - Button.randomizePosition()
 */
 
 // Define button class for the N buttons being generated on the screen
@@ -14,10 +15,19 @@ class Button {
         this.id = `button${this.number}`;
         // this.elementReference = document.createElement("button");
     }
-    moveButton() {
-        let windowWidth = window.innerWidth;
-        let windowHeight = window.innerHeight;
-        document.getElementById(`${this.id}`).style.transform = `translate(${Math.floor(Math.random() * windowWidth)}px, ${Math.floor(Math.random() * windowHeight)}px)`;
+    /**
+     * Moves the button to a random position within the window
+     * 
+     */
+    randomizePosition() {
+        const buttonElement = document.getElementById(this.id);
+        const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize)
+        const windowWidth = window.innerWidth / rootFontSize;
+        const windowHeight = window.innerHeight / rootFontSize;
+        buttonElement.style.transform = `translate(${Math.random() * (windowWidth - 10)}em, ${Math.random() * (windowHeight - 5)}em)`;
+    }
+    hideText() {
+        document.getElementById(`${this.id}`).innerText = "";
     }
 }
 
@@ -34,15 +44,6 @@ class Game {
         this.gameWindow = this.updateWindowDimensions
         this.gameButtons = [];
         this.init(numberOfButtons);
-        // setTimeout(() => {
-        //     this.renderButtons.bind(this)
-
-        //     setTimeout(() => {
-                // this.gameButtons.forEach((button) => {
-                //     button.moveButton();
-                // }
-        //     )}, 5000);
-        // }, numberOfButtons * 1000);
     } 
 
     /**
@@ -56,28 +57,6 @@ class Game {
         // Convert the random number to a hexadecimal string and pad with leading zeros if necessary
         const hexColor = `#${randomNum.toString(16).padStart(6, '0')}`;
         return hexColor;
-    }
-
-    /**
-     * Moves button
-     */
-    moveButtons(buttonToMove) {
-        let windowWidth = window.innerWidth;
-        let windowHeight = window.innerHeight;
-
-        // Get the root font size (usually from the <html> or <body> tag)
-        let rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
-
-        // Get the button's width and height in em from its computed style
-        let buttonWidthEm = parseFloat(getComputedStyle(buttonToMove).width);
-        let buttonHeightEm = parseFloat(getComputedStyle(buttonToMove).height);
-
-        // Convert button dimensions from em to px
-        let buttonWidthPx = buttonWidthEm * rootFontSize;
-        let buttonHeightPx = buttonHeightEm * rootFontSize;
-        buttonToMove.style.left = Math.floor(Math.random() * (windowWidth - buttonWidthPx)) + 'px';
-        buttonToMove.style.top = Math.floor(Math.random() * (windowHeight - buttonHeightPx)) + 'px';
-
     }
 
     /**
@@ -121,9 +100,12 @@ class Game {
                 });
             }
             this.gameButtons.forEach((button) => {
-                button.moveButton();
+                button.randomizePosition();
             });
         }
+        this.gameButtons.forEach((button) => {
+            button.hideText();
+        });
     }
 }
 
