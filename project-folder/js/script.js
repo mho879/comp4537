@@ -13,21 +13,27 @@ class Button {
         this.number = number;
         this.color = color;
         this.id = `button${this.number}`;
-        // this.elementReference = document.createElement("button");
+        this.elementReference = null;
     }
-    /**
-     * Moves the button to a random position within the window
-     * 
-     */
+    setElementReference(buttonFromDOM) {
+        this.elementReference = buttonFromDOM;
+    }
     randomizePosition() {
-        const buttonElement = document.getElementById(this.id);
-        const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize)
-        const windowWidth = window.innerWidth / rootFontSize;
-        const windowHeight = window.innerHeight / rootFontSize;
-        buttonElement.style.transform = `translate(${Math.random() * (windowWidth - 10)}em, ${Math.random() * (windowHeight - 5)}em)`;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        const buttonWidth = this.elementReference.offsetWidth;
+        const buttonHeight = this.elementReference.offsetHeight;
+
+        // Calculate random positions ensuring the button stays within bounds
+        const randomX = Math.random() * (windowWidth - buttonWidth);
+        const randomY = Math.random() * (windowHeight - buttonHeight);
+    
+        this.elementReference.style.top = `${randomY}`;
+        this.elementReference.style.left = `${randomX}`;
     }
     hideText() {
-        document.getElementById(`${this.id}`).innerText = "";
+        this.elementReference.innerText = "";
     }
 }
 
@@ -37,13 +43,9 @@ class Button {
 class Game {
     /**
      * Constructor for class Game
-     * 
-     * @param {string} numberOfButtons the number of buttons to create between 3 and 7
      */
-    constructor(numberOfButtons) {
-        this.gameWindow = this.updateWindowDimensions
+    constructor(s) {
         this.gameButtons = [];
-        this.init(numberOfButtons);
     } 
 
     /**
@@ -60,24 +62,18 @@ class Game {
     }
 
     /**
-     * Updates the gameWindow property's value with the current window size
-     */
-    updateWindowDimensions() {
-        this.gameWindow = document.getElementById("gameWindow")
-    }
-
-    /**
      * Render buttons on DOM
      * Loops through array gameButtons and creates a button element for each
      */
     renderButtons() {
         const buttonContainer = document.getElementById("buttonContainer");
         this.gameButtons.forEach((currentButton) => {
-            currentButton.elementReference = document.createElement("button");
+            const buttonAsElement = document.createElement("button");
+            currentButton.setElementReference(buttonAsElement);
             currentButton.elementReference.className += "customButton";
             currentButton.elementReference.style.background = currentButton.color;
             currentButton.elementReference.innerText = currentButton.number;
-            currentButton.elementReference.id = currentButton.id
+            currentButton.elementReference.id = currentButton.id;
             buttonContainer.appendChild(currentButton.elementReference);
         });
     }
@@ -86,7 +82,20 @@ class Game {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
+    clearButtons() {
+        this.gameButtons.forEach((button) => {
+            document.getElementById(`${button.id}`).remove();
+        });
+        this.gameButtons = [];
+    }
+
+    /**
+     * Initializes the game
+     * 
+     * @param {*} numberOfButtons the number of buttons to create between 3 and 7
+     */
     async init(numberOfButtons) {
+        this.clearButtons();
         for (let i = 0; i < numberOfButtons; i++) {
             this.gameButtons.push(new Button(i + 1, this.generateRandomColor()))
         }
@@ -96,7 +105,8 @@ class Game {
             await this.wait(2000);
             if (j == 0) {
                 this.gameButtons.forEach((button) => {
-                    document.getElementById(`${button.id}`).style.position = 'absolute';
+                    button.elementReference.style.position = 'absolute';
+                    button.elementReference.style.margin = '0px';
                 });
             }
             this.gameButtons.forEach((button) => {
@@ -106,6 +116,7 @@ class Game {
         this.gameButtons.forEach((button) => {
             button.hideText();
         });
+        console.log(this.gameButtons[0]);
     }
 }
 
@@ -116,7 +127,7 @@ class Message {
     }
 }
 
-
+const myGame = new Game(0);
 document.getElementById("goButton").addEventListener("click", () => {
-    new Game(document.getElementById("buttonCount").value);
+    myGame.init(document.getElementById("buttonCount").value);
 });
