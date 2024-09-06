@@ -5,6 +5,7 @@ body {
     width: 10em;
     height: 5em;
     margin: .5em;
+    top: 20%;
     position: relative;
 }
 
@@ -12,4 +13,5 @@ body {
     width: 100vw;
     height: 100vh;
     margin: 0px;
+    justify-content: center;
 }

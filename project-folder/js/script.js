@@ -7,7 +7,9 @@
     - Button.randomizePosition()
 */
 
-// Define button class for the N buttons being generated on the screen
+/**
+ *  Button class
+ */
 class Button {
     constructor(number, color) {
         this.number = number;
@@ -15,9 +17,27 @@ class Button {
         this.id = `button${this.number}`;
         this.elementReference = null;
     }
+    /**
+     * Setter for elementRefrence
+     * 
+     * @param {Element} buttonFromDOM reference to the relative button on the DOM
+     */
     setElementReference(buttonFromDOM) {
         this.elementReference = buttonFromDOM;
     }
+
+    /**
+     * Sets the inner text of the button element
+     *
+     * @param {string} text string to set the inner text to
+     */
+    setInnerText(text) {
+        this.elementReference.innerText = text;
+    }
+
+    /**
+     * Randomizes the position of this button within the viewport height & width
+     */
     randomizePosition() {
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
@@ -32,8 +52,15 @@ class Button {
         this.elementReference.style.top = `${randomY}`;
         this.elementReference.style.left = `${randomX}`;
     }
-    hideText() {
-        this.elementReference.innerText = "";
+
+    /**
+     * Makes the button element display its number on click
+     */
+    addClickFunction() {
+        this.elementReference.addEventListener('click', () => {
+            this.setInnerText(this.number);
+        });
+        
     }
 }
 
@@ -78,10 +105,19 @@ class Game {
         });
     }
 
+    /**
+     * Waits for N miliseconds
+     * 
+     * @param {int} ms the time to wait in milliseconds
+     * @returns a promise that invokes setTimeout
+     */
     wait(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
+        return new Promise((_) => setTimeout(_, ms));
     }
 
+    /**
+     * Removes buttons stored in gameButtons from the DOM and resets the gameButtons array
+     */
     clearButtons() {
         this.gameButtons.forEach((button) => {
             document.getElementById(`${button.id}`).remove();
@@ -114,9 +150,9 @@ class Game {
             });
         }
         this.gameButtons.forEach((button) => {
-            button.hideText();
+            button.setInnerText("");
+            button.addClickFunction();
         });
-        console.log(this.gameButtons[0]);
     }
 }
 
