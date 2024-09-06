@@ -14,7 +14,6 @@ class Button {
     constructor(number, color) {
         this.number = number;
         this.color = color;
-        this.id = `button${this.number}`;
         this.elementReference = null;
     }
     /**
@@ -100,7 +99,6 @@ class Game {
             currentButton.elementReference.className += "customButton";
             currentButton.elementReference.style.background = currentButton.color;
             currentButton.elementReference.innerText = currentButton.number;
-            currentButton.elementReference.id = currentButton.id;
             buttonContainer.appendChild(currentButton.elementReference);
         });
     }
@@ -120,9 +118,38 @@ class Game {
      */
     clearButtons() {
         this.gameButtons.forEach((button) => {
-            document.getElementById(`${button.id}`).remove();
+            button.elementReference.remove();
         });
         this.gameButtons = [];
+    }
+
+    /**
+     * Adds click listeners to buttons and starts game
+     */
+    startButtonClickingGame() {
+        let currentCount = 1;
+        this.gameButtons.forEach(button => {
+            let currentButtonNumber = button.number;
+            button.elementReference.addEventListener('click', () => {
+                if (currentCount == currentButtonNumber) {
+                    button.elementReference.innerText = currentButtonNumber;
+                    console.log(currentCount++);
+                } else {
+                    console.log(`Current ${currentCount} : Button num ${button.number}`)
+                    this.gameOver();
+                }
+            })
+        });
+            
+    }
+
+    /**
+     * Game over method for when the player clicks on the wrong box
+     */
+    gameOver() {
+        this.gameButtons.forEach(button => {
+            button.setInnerText(button.number);
+        })
     }
 
     /**
@@ -151,8 +178,8 @@ class Game {
         }
         this.gameButtons.forEach((button) => {
             button.setInnerText("");
-            button.addClickFunction();
         });
+        this.startButtonClickingGame();
     }
 }
 
