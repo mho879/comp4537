@@ -247,7 +247,7 @@ class MessageDisplay {
      * @returns the default exports from a user.js file
      */
     async loadMessages() {
-        const modulePath = `../lang/messages/${this.language}/user.js`;
+        const modulePath = `/COMP4537/labs/0/lang/messages/${this.language}/user.js`;
         try {
             const module = await import(modulePath);
             return module.default;
