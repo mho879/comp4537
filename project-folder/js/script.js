@@ -199,7 +199,7 @@ class Game {
      * 
      * @param {*} numberOfButtons the number of buttons to create between 3 and 7
      */
-    async init(numberOfButtons) {
+    async main(numberOfButtons) {
         if (numberOfButtons < 3 || numberOfButtons > 7) {
             this.MessageHandler.showMessage(NUMBER_RANGE);
         } else {
@@ -284,5 +284,5 @@ class MessageDisplay {
 
 const myGame = new Game(document.documentElement.lang);
 document.getElementById(GO_BUTTON_ID).addEventListener(EVENT_CLICK, () => {
-    myGame.init(document.getElementById(USER_INPUT_ID).value);
+    myGame.main(document.getElementById(USER_INPUT_ID).value);
 });
