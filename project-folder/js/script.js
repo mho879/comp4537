@@ -6,6 +6,8 @@
     - Game.generateRandomColor()
     - Game.wait()
     - Button.randomizePosition()
+    - Messages.loadMessages()
+    - Messages.init()
 */
 
 /**
@@ -96,6 +98,7 @@ class Game {
     constructor(language) {
         this.gameButtons = [];
         this.MessageHandler = new MessageDisplay(language);
+        this.currentButtonCount = null;
     } 
 
     /**
@@ -151,24 +154,30 @@ class Game {
      * Adds click listeners to buttons and starts game
      */
     startButtonClickingGame() {
-        let currentCount = 1;
+        this.currentButtonCount = 1;
         this.gameButtons.forEach(button => {
-            const myClickHandler = this.createButtonClickHandler(button, currentCount++);
-            button.elementReference.addEventListener(EVENT_CLICK, myClickHandler);
-            button.myClickHandler = myClickHandler;
+            const onClickHandler = this.createButtonClickHandler(button);
+            button.elementReference.addEventListener(EVENT_CLICK, onClickHandler);
+            button.onClickHandler = onClickHandler;
         });
-        if (currentCount == this.gameButtons.length) {
-            this.MessageHandler.showMessage(EXCELLENT_MEMORY);
-        }
     }
 
-    createButtonClickHandler(button, currentCount) {
+
+    /**
+     * Creates onClick handler for buttons within this.gameButtons
+     * 
+     * @param {*} button the button to add the handler to
+     * @returns the on-click handler
+     */
+    createButtonClickHandler(button) {
         return () => {
-            if (currentCount == button.number) {
+            if (button.number === this.currentButtonCount) {
                 button.elementReference.innerText = button.number;
-                // console.log(currentCount++);
+                this.currentButtonCount++;
+                if (this.currentButtonCount > this.gameButtons.length) {
+                    this.MessageHandler.showMessage(EXCELLENT_MEMORY);
+                }
             } else {
-                console.log(`Current ${currentCount} : Button num ${button.number}`);
                 this.gameOver();
             }
         };
@@ -180,7 +189,7 @@ class Game {
     gameOver() {
         this.gameButtons.forEach(button => {
             button.setInnerText(button.number);
-            button.elementReference.removeEventListener(EVENT_CLICK, button.myClickHandler);
+            button.elementReference.removeEventListener(EVENT_CLICK, button.onClickHandler);
         })
         this.MessageHandler.showMessage(WRONG_ORDER)
     }
