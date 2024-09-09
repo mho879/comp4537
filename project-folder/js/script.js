@@ -4,8 +4,31 @@
 
     The following code was generated with the help of ChatGPT:
     - Game.generateRandomColor()
+    - Game.wait()
     - Button.randomizePosition()
 */
+
+/**
+ * Constants for HTML elements
+ */
+const GO_BUTTON_ID = 'goButton';
+const BUTTON_CONTAINER_ID = 'buttonContainer';
+const CUSTOM_BUTTON_CLASS = 'customButton';
+const BUTTON_ELEMENT = 'button';
+const USER_INPUT_ID = 'UserInput';
+
+/**
+ * Constants for events
+ */
+const EVENT_CLICK = 'click';
+
+/**
+ * Constants for message Keys
+ */
+const NUMBER_RANGE = 'numberRange';
+const EXCELLENT_MEMORY = 'excellentMemory'
+const WRONG_ORDER = 'wrongOrder';
+
 
 /**
  *  Button class
@@ -44,7 +67,6 @@ class Button {
         const buttonWidth = this.elementReference.offsetWidth;
         const buttonHeight = this.elementReference.offsetHeight;
 
-        // Calculate random positions ensuring the button stays within bounds
         const randomX = Math.random() * (windowWidth - buttonWidth);
         const randomY = Math.random() * (windowHeight - buttonHeight);
     
@@ -56,22 +78,24 @@ class Button {
      * Makes the button element display its number on click
      */
     addClickFunction() {
-        this.elementReference.addEventListener('click', () => {
+        this.elementReference.addEventListener(EVENT_CLICK, () => {
             this.setInnerText(this.number);
         });
         
     }
 }
 
+
 /**
- * Game class for managing the game
+ * Game class
  */
 class Game {
     /**
      * Constructor for class Game
      */
-    constructor(s) {
+    constructor(language) {
         this.gameButtons = [];
+        this.MessageHandler = new MessageDisplay(language);
     } 
 
     /**
@@ -92,11 +116,11 @@ class Game {
      * Loops through array gameButtons and creates a button element for each
      */
     renderButtons() {
-        const buttonContainer = document.getElementById("buttonContainer");
+        const buttonContainer = document.getElementById(BUTTON_CONTAINER_ID);
         this.gameButtons.forEach((currentButton) => {
-            const buttonAsElement = document.createElement("button");
+            const buttonAsElement = document.createElement(BUTTON_ELEMENT);
             currentButton.setElementReference(buttonAsElement);
-            currentButton.elementReference.className += "customButton";
+            currentButton.elementReference.className += CUSTOM_BUTTON_CLASS;
             currentButton.elementReference.style.background = currentButton.color;
             currentButton.elementReference.innerText = currentButton.number;
             buttonContainer.appendChild(currentButton.elementReference);
@@ -129,18 +153,25 @@ class Game {
     startButtonClickingGame() {
         let currentCount = 1;
         this.gameButtons.forEach(button => {
-            let currentButtonNumber = button.number;
-            button.elementReference.addEventListener('click', () => {
-                if (currentCount == currentButtonNumber) {
-                    button.elementReference.innerText = currentButtonNumber;
-                    console.log(currentCount++);
-                } else {
-                    console.log(`Current ${currentCount} : Button num ${button.number}`)
-                    this.gameOver();
-                }
-            })
+            const myClickHandler = this.createButtonClickHandler(button, currentCount++);
+            button.elementReference.addEventListener(EVENT_CLICK, myClickHandler);
+            button.myClickHandler = myClickHandler;
         });
-            
+        if (currentCount == this.gameButtons.length) {
+            this.MessageHandler.showMessage(EXCELLENT_MEMORY);
+        }
+    }
+
+    createButtonClickHandler(button, currentCount) {
+        return () => {
+            if (currentCount == button.number) {
+                button.elementReference.innerText = button.number;
+                // console.log(currentCount++);
+            } else {
+                console.log(`Current ${currentCount} : Button num ${button.number}`);
+                this.gameOver();
+            }
+        };
     }
 
     /**
@@ -149,7 +180,9 @@ class Game {
     gameOver() {
         this.gameButtons.forEach(button => {
             button.setInnerText(button.number);
+            button.elementReference.removeEventListener(EVENT_CLICK, button.myClickHandler);
         })
+        this.MessageHandler.showMessage(WRONG_ORDER)
     }
 
     /**
@@ -158,39 +191,89 @@ class Game {
      * @param {*} numberOfButtons the number of buttons to create between 3 and 7
      */
     async init(numberOfButtons) {
-        this.clearButtons();
-        for (let i = 0; i < numberOfButtons; i++) {
-            this.gameButtons.push(new Button(i + 1, this.generateRandomColor()))
-        }
-        await this.wait(numberOfButtons * 1000);
-        this.renderButtons();
-        for (let j = 0; j < numberOfButtons; j++) {
-            await this.wait(2000);
-            if (j == 0) {
+        if (numberOfButtons < 3 || numberOfButtons > 7) {
+            this.MessageHandler.showMessage(NUMBER_RANGE);
+        } else {
+            this.clearButtons();
+            for (let i = 0; i < numberOfButtons; i++) {
+                this.gameButtons.push(new Button(i + 1, this.generateRandomColor()))
+            }
+            await this.wait(numberOfButtons * 1000);
+            this.renderButtons();
+            for (let j = 0; j < numberOfButtons; j++) {
+                await this.wait(2000);
+                if (j == 0) {
+                    this.gameButtons.forEach((button) => {
+                        button.elementReference.style.position = 'absolute';
+                        button.elementReference.style.margin = '0px';
+                    });
+                }
                 this.gameButtons.forEach((button) => {
-                    button.elementReference.style.position = 'absolute';
-                    button.elementReference.style.margin = '0px';
+                    button.randomizePosition();
                 });
             }
             this.gameButtons.forEach((button) => {
-                button.randomizePosition();
+                button.setInnerText("");
             });
+            this.startButtonClickingGame();
         }
-        this.gameButtons.forEach((button) => {
-            button.setInnerText("");
-        });
-        this.startButtonClickingGame();
     }
 }
 
-class Message {
-    constructor(number, color) {
-        this.number = number;
-        this.color = color;
+
+/**
+ * MessageDisplay class
+ * Manages the various messages to display
+ */
+class MessageDisplay {
+    constructor(language){
+        this.language = language;
+        this.messages = null;
+        this.init();
     }
+
+    /**
+     * Loads messages from user.js in resppective language folder in lang/messages
+     * 
+     * @returns the default exports from a user.js file
+     */
+    async loadMessages() {
+        const modulePath = `../lang/messages/${this.language}/user.js`;
+        try {
+            const module = await import(modulePath);
+            return module.default;
+        } catch (error) {
+            console.error("Error loading module:", error);
+            throw error;
+        }
+    }
+    
+    /**
+     * Initializes loadMessages() and handles the Promise
+     */
+    async init() {
+        try {
+            this.messages = await this.loadMessages();
+        } catch (error) {
+            console.error("Error loading messages in MessageDisplay:", error);
+        }
+    }
+
+
+    /**
+     * Displays the message in an alert box provided the key exists within MessageDisplay.messages
+     * 
+     * @param {*} type the key for an existing message within MessageDisplay.messages
+     */
+    showMessage(type) {
+        alert(this.messages[type]);
+    }
+    
+
+
 }
 
-const myGame = new Game(0);
-document.getElementById("goButton").addEventListener("click", () => {
-    myGame.init(document.getElementById("buttonCount").value);
+const myGame = new Game(document.documentElement.lang);
+document.getElementById(GO_BUTTON_ID).addEventListener(EVENT_CLICK, () => {
+    myGame.init(document.getElementById(USER_INPUT_ID).value);
 });
