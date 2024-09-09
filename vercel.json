@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/COMP4537/labs/0",  // Subdirectory for COMP4537 labs
-      "destination": "/labs/0/index.html"  // Path in your project where the content lives
+      "source": "/COMP4537/labs/0",
+      "destination": "/labs/0/index.html"
     },
   ]
 }
