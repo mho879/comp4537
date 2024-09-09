@@ -16,26 +16,7 @@ body {
     justify-content: center;
 }
 
-/* The alert message box */
-.alert {
-    padding: 20px;
-    background-color: #f44336; /* Red */
-    color: white;
-    position: fixed;
-    width: 100%;
-    z-index: +2;
-  }
-  
-  /* The close button */
-  .closebtn {
-    margin-left: 15px;
-    color: white;
-    font-weight: bold;
-    float: right;
-    font-size: 22px;
-    line-height: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-    position: fixed;
-    right: 2vw;
-  }
+#WelcomeMessageContainer{
+    position:fixed;
+    z-index: +1;
+}
