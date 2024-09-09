@@ -177,6 +177,7 @@ class Game {
                 if (this.currentButtonCount > this.gameButtons.length) {
                     this.MessageHandler.showMessage(EXCELLENT_MEMORY);
                 }
+                button.elementReference.removeEventListener(EVENT_CLICK, button.onClickHandler);
             } else {
                 this.gameOver();
             }
