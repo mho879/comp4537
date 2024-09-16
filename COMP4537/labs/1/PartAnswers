@@ -1,0 +1,5 @@
+1- open the writer.html and reader.html in two different tabs of same browser. Would the reader.html have access to the content stored in the local storage by the writer.html?
+Answer: Yes, reader.html will have access to the content stored into local storage by writer.html when they're both using the same browser as they share the same local storage and have the same origin.
+
+2- open the writer.html and reader.html in two different tabs of two different browsers ( e.g. one in chrome, one in Firefox) . Would the reader.html have access to the content stored in the local storage by the writer.html?
+Answer: No, reader.html will not have access to the contents stored in local storage by writer.html when they are using different browsers because local storage is browser specific.

@@ -1,0 +1,22 @@
+body {
+    margin: 0px;
+}
+.customButton {
+    width: 10em;
+    height: 5em;
+    margin: .5em;
+    top: 20%;
+    position: relative;
+}
+
+#buttonContainer {
+    width: 100vw;
+    height: 100vh;
+    margin: 0px;
+    justify-content: center;
+}
+
+#WelcomeMessageContainer{
+    position:fixed;
+    z-index: +1;
+}
