@@ -7,6 +7,10 @@
     {
       "source": "COMP4537/labs/1",
       "destination": "/labs/1/index.html"
+    },
+    {
+      "source": "COMP4537/labs/1/writer.html",
+      "destination": "/labs/1/writer.html"
     }
   ]
 }

@@ -1,1 +1,4 @@
 Part2Answers.txt
+
+# Ignore all zip files
+*.zip
