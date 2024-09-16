@@ -1,6 +1,4 @@
-body {
-    margin: 0px;
-}
+
 .customButton {
     width: 10em;
     height: 5em;
@@ -19,4 +17,29 @@ body {
 #WelcomeMessageContainer{
     position:fixed;
     z-index: +1;
+}
+
+.customNote{
+    text-decoration-color: azure;
+}
+
+.customNoteContainer {
+    background-color: cornflowerblue;
+    text-decoration-color: azure;
+    width: 20em;
+    height: 20em;
+}
+
+.noteInputField {
+    background-color: cornflowerblue;
+    color: azure;
+    width: 40em;
+    height: 20em;
+    border: none;
+    outline: none;
+    margin: 10px;
+}
+
+textarea {
+    resize: none;
 }
