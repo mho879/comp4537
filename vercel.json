@@ -9,8 +9,12 @@
       "destination": "/labs/1/index.html"
     },
     {
-      "source": "COMP4537/labs/1/writer.html",
+      "source": "COMP4537/labs/1/writer",
       "destination": "/labs/1/writer.html"
+    },
+    {
+      "source": "COMP4537/labs/1/reader",
+      "destination": "/labs/1/reader.html"
     }
   ]
 }
