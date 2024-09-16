@@ -5,6 +5,7 @@
 
     The following code was generated with the help of ChatGPT:
     - NoteManager.updateMostRecentTime()
+    - If condition for what HTML page the DOM is on (line 223)
 
 */
 
@@ -19,12 +20,21 @@ const DIV_ELEMENT = 'div';
 const USER_INPUT_ID = 'UserInput';
 const BUTTON_ELEMENT = 'button';
 const DELETE_TEXT = 'Delete'
+const TEXT_AREA = 'textarea';
+const LAST_STORE_ID = 'lastStore';
+const NOTE_WRAPPER_CLASS = 'noteWrapper';
+const DELETE_CLASS = 'deleteButton'
 
 /**
  * Constants for events
  */
 const EVENT_CLICK = 'click';
+const EVENT_LOAD = 'load';
 
+/**
+ * Constants for message Keys
+ */
+const LAST_STORED = 'lastStoreMessage';
 
 class Note {
     constructor(id) {
@@ -34,48 +44,85 @@ class Note {
         this.deleteButtonReference = null;
     }
 
+    /**
+     * Setter for this.userInputText
+     * 
+     * @param {string} newText the text inputted by user
+     */
     setUserInputText(newText) {
         this.userInputText = newText;
     }
 
+    /**
+     * Setter for this note's reference to the textarea element
+     * 
+     * @param {Element} elementReference 
+     */
     setElementReference(elementReference) {
         this.elementReference = elementReference;
     }
 
+    /**
+     * Setter for this.noteId
+     *
+     * @param {number} noteId 
+     */
     setNoteId(noteId) {
         this.noteId = noteId;
     }
 
+    /**
+     * Getter for this.userInputText
+     * 
+     * @returns the text stored in this object
+     */
     getUserInputText() {
         return this.userInputText;
     }
 
+    /**
+     * Set this.deleteButtonReference
+     * 
+     * @param {*} deleteButtonElement reference to the button to store
+     */
+    setDeleteButton(deleteButtonElement) {
+        this.deleteButtonReference = deleteButtonElement;
+    }
+
+    /**
+     * Create delete button and store the reference
+     * 
+     * @param {*} noteManager 
+     */
     createDeleteButton(noteManager) {
         const deleteButtonReference = document.createElement(BUTTON_ELEMENT);
         deleteButtonReference.textContent = DELETE_TEXT;
         deleteButtonReference.addEventListener(EVENT_CLICK, () => {
-            console.log(this.noteId);
             noteManager.deleteNote(this.noteId);
         });
-        this.deleteButtonReference = deleteButtonReference;
+        this.setDeleteButton(deleteButtonReference);
     }
 
-    setDeleteButton(deleteButtonElement) {
-        this.deleteButtonReference = deleteButtonElement;
-    }
 }
 
 /**
  * NoteManager class
  */
 class NoteManager {
-    constructor() {
+    constructor(language) {
         this.noteCollection = [];
+        this.MessageHandler = new MessageDisplay(language);
         this.startAutoSave();
     }
 
+    /**
+     * Create note element add it to the DOM and this NoteManager
+     * 
+     * @param {*} noteId id of the note object
+     * @param {*} noteText text stored in the note object
+     */
     createNoteElement(noteId, noteText = '') {
-        const noteElement = document.createElement('textarea');
+        const noteElement = document.createElement(TEXT_AREA);
         noteElement.className = NOTE_INPUT_FIELD_CLASS;
         noteElement.value = noteText;
 
@@ -84,8 +131,12 @@ class NoteManager {
         newNote.setNoteId(noteId);
         newNote.setUserInputText(noteText);
         this.createDeleteButton(newNote);
+        if (window.location.pathname.endsWith('reader.html')) {
+            noteElement.setAttribute('readonly', true);
+        }
 
-        const noteWrapper = document.createElement('div');
+        const noteWrapper = document.createElement(DIV_ELEMENT);
+        noteWrapper.className = NOTE_WRAPPER_CLASS;
         noteWrapper.appendChild(noteElement);
         noteWrapper.appendChild(newNote.deleteButtonReference);
 
@@ -93,18 +144,33 @@ class NoteManager {
         this.noteCollection.push(newNote);
     }
     
+    /**
+     * Adds a note to the DOM and this NoteManager
+     */
     addNote() {
         const noteId = this.noteCollection.length;
         this.createNoteElement(noteId);
     }
 
+    /**
+     * Creates a delete button for the note
+     * 
+     * @param {Note} note the note object to attach the delete button to
+     */
     createDeleteButton(note) {
         const deleteButtonReference = document.createElement(BUTTON_ELEMENT);
         deleteButtonReference.textContent = DELETE_TEXT;
+        deleteButtonReference.className = DELETE_CLASS;
         deleteButtonReference.addEventListener(EVENT_CLICK, this.deleteNote(note.noteId));
         note.setDeleteButton(deleteButtonReference);
     }
 
+    /**
+     * Returns an event handler for the delete button
+     * 
+     * @param {*} noteId the id of the note for the event handler
+     * @returns the delete note event hanlder
+     */
     deleteNote(noteId) {
         return () => {
             const noteIndex = this.noteCollection.findIndex(note => note.noteId == noteId);
@@ -119,6 +185,9 @@ class NoteManager {
         }
     }
 
+    /**
+     * Loads notes from local storage and updates the DOM
+     */
     loadNotes() {
         const savedNotes = JSON.parse(localStorage.getItem('notes') || '[]');
         savedNotes.forEach((noteData) => {
@@ -126,12 +195,18 @@ class NoteManager {
         });
     }
 
+    /**
+     * Updates the stored text within each note object stored in this.noteCollection
+     */
     updateStoredText() {
         this.noteCollection.forEach(note => {
             note.setUserInputText(note.elementReference.value);
         });
     }
 
+    /**
+     * Updates the JSON within local storage with the current notes on the DOM
+     */
     updateStorage() {
         const notesData = this.noteCollection.map(note => ({
             noteId: note.noteId,
@@ -140,11 +215,21 @@ class NoteManager {
         localStorage.setItem('notes', JSON.stringify(notesData));
     }
 
+    /**
+     * Updates the timer on the screen representing the most recent time the notes have beend saved
+     */
     updateMostRecentStoreTime() {
-        const lastUpdateElement = document.getElementById('lastStore');
-        lastUpdateElement.textContent = `Stored at: ${new Date().toLocaleTimeString()}`;
+        const lastUpdateElement = document.getElementById(LAST_STORE_ID);
+        if (this.MessageHandler.messages != null) {
+            lastUpdateElement.textContent = `${this.MessageHandler.messages[LAST_STORED]} ${new Date().toLocaleTimeString()}`;
+        } else {
+            lastUpdateElement.textContent = new Date().toLocaleTimeString();
+        }
     }
 
+    /**
+     * Starts the auto save process that occurs every 2 seconds
+     */
     startAutoSave() {
         setInterval(() => {
             this.updateStoredText();
@@ -155,12 +240,71 @@ class NoteManager {
 }
 
 
-const myNoteManager = new NoteManager();
-document.getElementById(ADD_NOTE_BUTTON_ID).addEventListener(EVENT_CLICK, () => {
-    myNoteManager.addNote();
-});
+/**
+ * MessageDisplay class
+ * Manages the various messages to display
+ */
+class MessageDisplay {
+    constructor(language){
+        this.language = language;
+        this.messages = null;
+        this.init();
+    }
 
-window.addEventListener('load', () => {
+    /**
+     * Loads messages from user.js in resppective language folder in lang/messages
+     * 
+     * @returns the default exports from a user.js file
+     */
+    async loadMessages() {
+        const modulePath = `/COMP4537/labs/1/lang/messages/${this.language}/user.js`;
+        try {
+            const module = await import(modulePath);
+            return module.default;
+        } catch (error) {
+            console.error("Error loading module:", error);
+            throw error;
+        }
+    }
+    
+    /**
+     * Initializes loadMessages() and handles the Promise
+     */
+    async init() {
+        try {
+            this.messages = await this.loadMessages();
+        } catch (error) {
+            console.error("Error loading messages in MessageDisplay:", error);
+        }
+    }
+
+    /**
+     * Returns the message associate with the message key
+     * 
+     * @param {*} messageKey 
+     */
+    getMessage(messageKey) {
+        console.log(this.messages[messageKey]);
+        return this.messages[messageKey];
+    }
+
+}
+
+
+/**
+ * Creates a NoteManager and adds an "Add Note" button if the page ends with writer.html
+ */
+const myNoteManager = new NoteManager(document.documentElement.lang);
+if (window.location.pathname.endsWith('writer.html')) {
+    document.getElementById(ADD_NOTE_BUTTON_ID).addEventListener(EVENT_CLICK, () => {
+        myNoteManager.addNote();
+    });
+}
+
+/**
+ * Loads notes in localstorage on page load and updates most recent save time
+ */
+window.addEventListener(EVENT_LOAD, () => {
     myNoteManager.loadNotes();
     myNoteManager.updateMostRecentStoreTime();
 });

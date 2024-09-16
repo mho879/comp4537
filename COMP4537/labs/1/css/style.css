@@ -26,8 +26,11 @@
 .customNoteContainer {
     background-color: cornflowerblue;
     text-decoration-color: azure;
-    width: 20em;
+    width: 40em;
     height: 20em;
+    border: none;
+    outline: none;
+    margin: 10px;
 }
 
 .noteInputField {
@@ -42,4 +45,20 @@
 
 textarea {
     resize: none;
+}
+
+#lastStore {
+    text-align: right;
+}
+
+.noteWrapper {
+    display: flex;
+    flex-direction: row; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+}
+.deleteButton {
+    background-color: orange;
+    color: white;
+    display: inline-block;
+    border: none;
 }
