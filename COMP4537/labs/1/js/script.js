@@ -291,32 +291,45 @@ class MessageDisplay {
 
 
 /**
- * Creates a NoteManager and adds an "Add Note" button if the page ends with writer.html
+ * NoteManagerController class
  */
-const myNoteManager = new NoteManager(document.documentElement.lang);
-if (window.location.pathname.endsWith('writer.html')) {
-    document.getElementById(ADD_NOTE_BUTTON_ID).addEventListener(EVENT_CLICK, () => {
-        myNoteManager.addNote();
-    });
+class NoteManagerController {
+    constructor() {
+        this.noteManager = new NoteManager(document.documentElement.lang);
+        this.initializeEventListeners();
+    }
+
+    /**
+     * Starts Event Listeners
+     */
+    initializeEventListeners() {
+        // Add note button only for writer.html
+        if (window.location.pathname.endsWith('writer.html')) {
+            document.getElementById(ADD_NOTE_BUTTON_ID).addEventListener(EVENT_CLICK, () => {
+                this.noteManager.addNote();
+            });
+        }
+
+        // Load notes on page load
+        window.addEventListener(EVENT_LOAD, () => {
+            this.noteManager.loadNotes();
+            this.noteManager.updateMostRecentStoreTime();
+        });
+
+        // Listen for storage changes (e.g., in localStorage)
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'notes') {
+                const notesContainer = document.getElementById(NOTES_CONTAINER_ID);
+                notesContainer.innerHTML = '';
+
+                this.noteManager.noteCollection = [];
+                this.noteManager.loadNotes();
+            }
+        });
+    }
 }
 
-/**
- * Loads notes in localstorage on page load and updates most recent save time
- */
-window.addEventListener(EVENT_LOAD, () => {
-    myNoteManager.loadNotes();
-    myNoteManager.updateMostRecentStoreTime();
-});
+
+const myNoteManagerController = new NoteManagerController();
 
 
-window.addEventListener('storage', (event) => {
-    if (event.key === 'notes') {
-        // Clear current notes in the DOM
-        const notesContainer = document.getElementById(NOTES_CONTAINER_ID);
-        notesContainer.innerHTML = '';  // Clears out the current notes
-
-        // Reload notes from localStorage
-        myNoteManager.noteCollection = [];  // Clear the note collection
-        myNoteManager.loadNotes();  // Re-populate the note collection from localStorage
-    }
-});
