@@ -295,13 +295,13 @@ class NoteManagerController {
             });
         }
 
-        // Load notes on page load
+        // Event listener for when page loads
         window.addEventListener(EVENT_LOAD, () => {
             this.noteManager.loadNotes();
             this.noteManager.updateMostRecentStoreTime();
         });
 
-        // Listen for changes to to localStorage
+        // Event listener for when localStorage is updated
         window.addEventListener('storage', (event) => {
             if (event.key === 'notes') {
                 const notesContainer = document.getElementById(NOTES_CONTAINER_ID);
