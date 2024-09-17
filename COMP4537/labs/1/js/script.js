@@ -316,7 +316,7 @@ class NoteManagerController {
             this.noteManager.updateMostRecentStoreTime();
         });
 
-        // Listen for storage changes (e.g., in localStorage)
+        // Listen for changes to to localStorage
         window.addEventListener('storage', (event) => {
             if (event.key === 'notes') {
                 const notesContainer = document.getElementById(NOTES_CONTAINER_ID);
