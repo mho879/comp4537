@@ -88,21 +88,6 @@ class Note {
     setDeleteButton(deleteButtonElement) {
         this.deleteButtonReference = deleteButtonElement;
     }
-
-    /**
-     * Create delete button and store the reference
-     * 
-     * @param {*} noteManager 
-     */
-    createDeleteButton(noteManager) {
-        const deleteButtonReference = document.createElement(BUTTON_ELEMENT);
-        deleteButtonReference.textContent = DELETE_TEXT;
-        deleteButtonReference.addEventListener(EVENT_CLICK, () => {
-            noteManager.deleteNote(this.noteId);
-        });
-        this.setDeleteButton(deleteButtonReference);
-    }
-
 }
 
 /**
