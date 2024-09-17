@@ -175,7 +175,6 @@ class NoteManager {
         return () => {
             const noteIndex = this.noteCollection.findIndex(note => note.noteId == noteId);
             if (noteIndex !== -1) {
-                console.log(`NoteIndex: ${noteIndex}`)
                 const note = this.noteCollection[noteIndex];
                 note.elementReference.remove();
                 note.deleteButtonReference.remove();
@@ -307,4 +306,17 @@ if (window.location.pathname.endsWith('writer.html')) {
 window.addEventListener(EVENT_LOAD, () => {
     myNoteManager.loadNotes();
     myNoteManager.updateMostRecentStoreTime();
+});
+
+
+window.addEventListener('storage', (event) => {
+    if (event.key === 'notes') {
+        // Clear current notes in the DOM
+        const notesContainer = document.getElementById(NOTES_CONTAINER_ID);
+        notesContainer.innerHTML = '';  // Clears out the current notes
+
+        // Reload notes from localStorage
+        myNoteManager.noteCollection = [];  // Clear the note collection
+        myNoteManager.loadNotes();  // Re-populate the note collection from localStorage
+    }
 });
