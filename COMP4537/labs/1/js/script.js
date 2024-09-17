@@ -5,7 +5,8 @@
 
     The following code was generated with the help of ChatGPT:
     - NoteManager.updateMostRecentTime()
-    - If condition for what HTML page the DOM is on (line 223)
+    - If condition for what HTML page the DOM
+    - NoteManagerController class
 
 */
 
