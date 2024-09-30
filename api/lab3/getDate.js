@@ -39,14 +39,14 @@ class Server {
         const message = this.MessageHandler.getFunctionMessage('greetingMessage', [name, this.date.getCurrentDateTime()]);
 
         res.writeHead(200, {
-            'Content-Type': 'text/html; charset=utf-8',
+            'Content-Type': 'text/html;',
         });
 
         res.end(BLUE_TEXT + message);
     }
     
     /**
-     * Listens for the accepted port
+     * Listens for the accepted port for testing locally
      */
     start() {
         const port = process.env.PORT || 8000;
@@ -62,6 +62,7 @@ module.exports = (req, res) => {
     server.handleRequest(req, res);
 };
 
+// Commented out code - for testing locally
 // const myServer = new Server('en');
 // myServer.start();
 
