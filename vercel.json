@@ -1,16 +1,20 @@
 {
   "rewrites": [
     {
-      "source": "COMP4537/labs/0",
+      "source": "/COMP4537/labs/0",
       "destination": "/labs/0/index.html"
     },
     {
-      "source": "COMP4537/labs/1",
+      "source": "/COMP4537/labs/1",
       "destination": "/labs/1/index.html"
     },
     {
-      "source": "COMP4537/labs/1/writer",
+      "source": "/COMP4537/labs/1/writer",
       "destination": "/labs/1/writer.html"
+    },
+    {
+      "source": "/api/lab3/server",
+      "destination": "/api/lab3/server.js"
     }
   ]
 }

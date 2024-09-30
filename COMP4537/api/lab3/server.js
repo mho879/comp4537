@@ -56,9 +56,9 @@ class Server {
     }
 }
 
+const server = new Server('en');
 // Export a function to handle requests
 module.exports = (req, res) => {
-    const server = new Server('en');
     server.handleRequest(req, res);
 };
 
