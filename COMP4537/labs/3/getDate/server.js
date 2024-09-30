@@ -16,15 +16,12 @@ class Server {
         const url = new URL(req.url, `http://${req.headers.host}`);
         const params = new URLSearchParams(url.search);
         const name = params.get('name');
-
         const message = this.MessageHandler.getFunctionMessage('greetingMessage', [name, this.date.getCurrentDateTime()]);
 
-        // Set response headers
         res.writeHead(200, {
             'Content-Type': 'text/html; charset=utf-8',
         });
 
-        // Send the response
         res.end(`<p style="color: blue;">${message}</h1>`);
         }
 
