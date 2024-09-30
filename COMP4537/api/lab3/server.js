@@ -62,6 +62,6 @@ module.exports = (req, res) => {
     server.handleRequest(req, res);
 };
 
-const myServer = new Server('en');
-myServer.start();
+// const myServer = new Server('en');
+// myServer.start();
 
