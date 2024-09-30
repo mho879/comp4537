@@ -53,7 +53,7 @@ class MessageDisplay {
      * Returns the message function asscoiated with the message key
      * 
      * @param {string} messageKey the key value of the desired message stored within this.messsages
-     * @param {array} args the arguments to pass to the message
+     * @param {string[]} args the arguments to pass to the message
      */
     getFunctionMessage(messageKey, args) {
         let message = this.messages[messageKey];
