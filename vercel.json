@@ -12,8 +12,5 @@
       "source": "COMP4537/labs/1/writer",
       "destination": "/labs/1/writer.html"
     }
-  ],
-  "functions": {
-    "api/lab3/*.js": {}
-  }
+  ]
 }
