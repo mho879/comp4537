@@ -6,7 +6,7 @@ const MESSAGES = require('C:/Class/COMP 4537 Internet Archi/comp4537 repo/COMP45
 // '/COMP4537/labs/3/getDate/modules/'
 
 class Server {
-    constructor(port, language) {
+    constructor(port) {
         this.date = new DateTimeRetriever();
         this.port = port;
         this.server = http.createServer(this.handleRequest.bind(this));
@@ -36,10 +36,10 @@ class Server {
 }
 
 class main {
-    constructor(port, language) {
-        this.server = new Server(port, language);
+    constructor(port) {
+        this.server = new Server(port);
         this.server.start();
     }
 }
 
-new main(8000, 'en')
+new main(8000)
