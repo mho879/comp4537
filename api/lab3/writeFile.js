@@ -5,12 +5,20 @@
 
     The following code was generated with the help of ChatGPT:
     - WriteServer.appendToFile();
+    - WriteServer.appendToS3();
 
 */
 
 const http = require('node:http');
 const {URL} = require('node:url');
 const fs = require('fs');
+const AWS = requrie('aws-sdk');
+
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: 'us-west-2'
+})
 
 /**
  * WriteServer class
@@ -33,7 +41,7 @@ class WriteServer {
         const textToAppend = url.searchParams.get('text');
 
         if (textToAppend) {
-            this.appendToFile(textToAppend, res);
+            this.appendToS3(textToAppend, res);
         }
     }
 
@@ -51,6 +59,29 @@ class WriteServer {
                 this.sendResponse(res, 200, `Appended "${text}" to file.txt`);
             }
         });
+    }
+
+    /**
+     * Appends accepted text to file.txt located in S3 bucket
+     * 
+     * @param {*} text the text to append to file
+     * @param {*} res the response object
+     */
+    appendToS3(text, res) {
+        const params = {
+            Bucket: 'comp4537-lab3-mho',
+            Key: 'file.txt', // File name in S3
+            Body: `${text}\n`,
+            ContentType: 'text/plain'
+        };
+
+        s3.upload(params, (err, data) => {
+            if (err) {
+                this.sendResponse(res, 500, 'Error appending text to file.txt in S3');
+            } else {
+                this.sendResponse(res, 200, `Appended "${text} to file.txt in S3. Data: ${data}`)
+            }
+        })
     }
 
     /**
