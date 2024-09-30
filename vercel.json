@@ -12,5 +12,20 @@
       "source": "COMP4537/labs/1/writer",
       "destination": "/labs/1/writer.html"
     }
+  ],
+  "routes": [
+    {
+      "src": "/api/lab3/getDate",
+      "dest": "/api/server.js"
+    },
+    {
+      "src": "/COMP4537/labs/3/getDate",
+      "dest": "/api/server.js"
+    }
+  ],
+  "builds": [
+    {
+      "src": "api/getDate.js",
+      "use": "@vercel/node"
+    }
   ]
-}
