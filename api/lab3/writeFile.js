@@ -12,7 +12,7 @@
 const http = require('node:http');
 const {URL} = require('node:url');
 const fs = require('fs');
-const AWS = requrie('aws-sdk');
+const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
