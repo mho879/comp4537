@@ -11,10 +11,6 @@
     {
       "source": "COMP4537/labs/1/writer",
       "destination": "/labs/1/writer.html"
-    },
-    {
-      "source": "COMP4537/labs/3/getDate",
-      "destination": "/api/lab3/server.js"
     }
   ]
 }
