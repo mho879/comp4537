@@ -79,7 +79,7 @@ class WriteServer {
             if (err) {
                 this.sendResponse(res, 500, 'Error appending text to file.txt in S3');
             } else {
-                this.sendResponse(res, 200, `Appended "${text} to file.txt in S3. Data: ${data}`)
+                this.sendResponse(res, 200, `Appended "${text} to file.txt in S3. Data: ${JSON.stringify(data)}`)
             }
         })
     }
