@@ -5,14 +5,20 @@
 
     The following code was generated with the help of ChatGPT:
     - ReadServer.readFile()
-
+    - ReadServer.readS3File()
 */
 
 const http = require('node:http');
 const {URL} = require('node:url');
 const fs = require('fs');
 const path = require('node:path');
+const AWS = require('aws-sdk');
 
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: 'us-west-2'
+})
 
 /**
  * ReadServer class
@@ -35,7 +41,7 @@ class ReadServer {
         const requestedFile = path.parse(req.url).base;
         const filePath = path.join(__dirname, 'file.txt');
         if (requestedFile === 'file.txt') {
-            this.readFile(filePath, res);
+            this.readFromS3(filePath, res);
         } else {
             this.sendResponse(res, 404, 'Not Found');
         }
@@ -49,7 +55,7 @@ class ReadServer {
      * @param {*} filePath path of the file to read
      * @param {*} res the HTTP response
      */
-    readFile(filePath, res) {
+    readLocalFile(filePath, res) {
         fs.readFile(filePath, 'utf8', (err, data) => {
             if (err) {
                 if (err.code === 'ENOENT') {
@@ -65,6 +71,34 @@ class ReadServer {
             }
         });
     }
+
+    /**
+     * Reads file from S3 and includes file data in response
+     * 
+     * @param {*} fileName name of the file to read from S3
+     * @param {*} res the HTTP response
+     */
+    readFromS3(fileName, res) {
+        const params = {
+            Bucket: 'comp4537-', // Replace with your S3 bucket name
+            Key: fileName
+        };
+
+        s3.getObject(params, (err, data) => {
+            if (err) {
+                if (err.code === 'NoSuchKey') {
+                    this.sendResponse(res, 404, `File not found in S3: ${fileName}`);
+                } else {
+                    this.sendResponse(res, 500, 'Error reading the file from S3');
+                }
+            } else {
+                // File exists in S3, return its content
+                const fileContent = data.Body.toString('utf-8');
+                this.sendResponse(res, 200, fileContent);
+            }
+        });
+    }
+
 
     /**
      * Sends HTTP response
