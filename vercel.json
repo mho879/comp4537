@@ -13,8 +13,12 @@
       "destination": "/labs/1/writer.html"
     },
     {
+      "source": "COMP4537/labs/3/getDate",
+      "destination": "/labs/3/getDate/server.js"
+    },
+    {
       "source": "COMP4537/labs/1/reader",
       "destination": "/labs/1/reader.html"
-    }
+    },
   ]
 }
