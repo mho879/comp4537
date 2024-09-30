@@ -23,7 +23,7 @@ class Server {
     constructor(language) {
         this.MessageHandler = new MessageDisplay(language);
         this.date = new DateTimeRetriever();
-        this.server = http.createServer(this.handleRequest.bind(this));
+        // this.server = http.createServer(this.handleRequest.bind(this));
     }
 
     /**
@@ -56,7 +56,11 @@ class Server {
     }
 }
 
-module.exports = new Server('en');
+// Export a function to handle requests
+module.exports = (req, res) => {
+    const server = new Server('en');
+    server.handleRequest(req, res);
+};
 
 // /**
 //  * Main class
