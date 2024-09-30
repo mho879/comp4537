@@ -1,9 +1,14 @@
 const http = require('node:http');
 const {URL} = require('node:url');
 const {MessageDisplay, DateTimeRetriever} = require('C:/Class/COMP 4537 Internet Archi/comp4537 repo/COMP4537/labs/3/getDate/modules/util.js');
+const BLUE_TEXT = '\x1b[34m';
 
 // '/COMP4537/labs/3/getDate/modules/'
 
+/**
+ * Server class
+ * Handles server creation and requests/responses
+ */
 class Server {
     constructor(port, language) {
         this.MessageHandler = new MessageDisplay(language);
@@ -22,7 +27,7 @@ class Server {
             'Content-Type': 'text/html; charset=utf-8',
         });
 
-        res.end(`<p style="color: blue;">${message}</h1>`);
+        res.end(BLUE_TEXT + message);
         }
 
     start() {
@@ -32,6 +37,10 @@ class Server {
     }
 }
 
+/**
+ * Main class
+ * Drives the server
+ */
 class main {
     constructor(port, language) {
         this.server = new Server(port, language);
