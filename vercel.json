@@ -19,6 +19,6 @@
   ],
   "version": 2,
   "routes": [
-    { "src": "/api/getDate", "dest": "/api/lab3/server.js" }
+    { "src": "/COMP4537/api/getDate", "dest": "/COMP4537/api/lab3/server.js" }
   ]
 }
