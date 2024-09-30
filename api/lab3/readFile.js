@@ -38,11 +38,11 @@ class ReadServer {
      */
     handleRequest(req, res) {
         const url = new URL(req.url, `http://${req.headers.host}`);
-        const requestedFile = path.parse(req.url).base;
+        const requestedFile = url.pathname.split('/').pop(); // Extract the filename from the path
         if (requestedFile === 'file.txt') {
             this.readFromS3(requestedFile, res);
         } else {
-            this.sendResponse(res, 404, 'Not Found');
+            this.sendResponse(res, 404, 'File not found');
         }
 
 

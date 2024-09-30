@@ -13,8 +13,8 @@
       "destination": "/labs/1/writer.html"
     },
     {
-      "source": "/api/lab3/server",
-      "destination": "/api/lab3/server.js"
+      "source": "/api/lab3/readFile/(.*)",
+      "destination": "/api/lab3/readFile.js"
     }
   ]
 }
