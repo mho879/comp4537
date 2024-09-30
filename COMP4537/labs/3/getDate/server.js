@@ -1,12 +1,13 @@
 const http = require('node:http');
 const {URL} = require('node:url');
-const DateTimeRetriever = require('C:/Class/COMP 4537 Internet Archi/comp4537 repo/COMP4537/labs/3/getDate/modules/util.js');
+const {MessageDisplay, DateTimeRetriever} = require('C:/Class/COMP 4537 Internet Archi/comp4537 repo/COMP4537/labs/3/getDate/modules/util.js');
 const MESSAGES = require('C:/Class/COMP 4537 Internet Archi/comp4537 repo/COMP4537/labs/3/getDate/lang/messages/en/user.js')
 
 // '/COMP4537/labs/3/getDate/modules/'
 
 class Server {
-    constructor(port) {
+    constructor(port, language) {
+        this.MessageHandler = new MessageDisplay(language);
         this.date = new DateTimeRetriever();
         this.port = port;
         this.server = http.createServer(this.handleRequest.bind(this));
@@ -17,7 +18,7 @@ class Server {
         const params = new URLSearchParams(url.search);
         const name = params.get('name');
 
-        const message = MESSAGES.greetingMessage(name, this.date.getCurrentDateTime());
+        const message = this.MessageHandler.getFunctionMessage('greetingMessage', [name, this.date.getCurrentDateTime()]);
 
         // Set response headers
         res.writeHead(200, {
@@ -36,10 +37,10 @@ class Server {
 }
 
 class main {
-    constructor(port) {
-        this.server = new Server(port);
+    constructor(port, language) {
+        this.server = new Server(port, language);
         this.server.start();
     }
 }
 
-new main(8000)
+new main(8000, 'en')
