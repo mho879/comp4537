@@ -39,9 +39,8 @@ class ReadServer {
     handleRequest(req, res) {
         const url = new URL(req.url, `http://${req.headers.host}`);
         const requestedFile = path.parse(req.url).base;
-        const filePath = path.join(__dirname, 'file.txt');
         if (requestedFile === 'file.txt') {
-            this.readFromS3(filePath, res);
+            this.readFromS3(requestedFile, res);
         } else {
             this.sendResponse(res, 404, 'Not Found');
         }
@@ -59,7 +58,7 @@ class ReadServer {
         fs.readFile(filePath, 'utf8', (err, data) => {
             if (err) {
                 if (err.code === 'ENOENT') {
-                    // File does not exist
+                    // File does not exist (Error NO ENTry)
                     this.sendResponse(res, 404, `File not found: ${path.basename(filePath)}`);
                 } else {
                     // Some other error occurred
@@ -80,7 +79,7 @@ class ReadServer {
      */
     readFromS3(fileName, res) {
         const params = {
-            Bucket: 'comp4537-', // Replace with your S3 bucket name
+            Bucket: 'comp4537-lab3-mho', // Replace with your S3 bucket name
             Key: fileName
         };
 
