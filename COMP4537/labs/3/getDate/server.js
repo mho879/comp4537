@@ -1,7 +1,6 @@
 const http = require('node:http');
 const {URL} = require('node:url');
 const {MessageDisplay, DateTimeRetriever} = require('C:/Class/COMP 4537 Internet Archi/comp4537 repo/COMP4537/labs/3/getDate/modules/util.js');
-const MESSAGES = require('C:/Class/COMP 4537 Internet Archi/comp4537 repo/COMP4537/labs/3/getDate/lang/messages/en/user.js')
 
 // '/COMP4537/labs/3/getDate/modules/'
 
