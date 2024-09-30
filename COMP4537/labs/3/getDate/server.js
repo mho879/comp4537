@@ -1,3 +1,13 @@
+/*
+    Marco Ho (Set T)
+    A01338160
+    COMP 4537 Lab 1
+
+    The following code was generated with the help of ChatGPT:
+
+
+*/
+
 const http = require('node:http');
 const {URL} = require('node:url');
 const {MessageDisplay, DateTimeRetriever} = require('C:/Class/COMP 4537 Internet Archi/comp4537 repo/COMP4537/labs/3/getDate/modules/util.js');
@@ -17,6 +27,12 @@ class Server {
         this.server = http.createServer(this.handleRequest.bind(this));
     }
 
+    /**
+     * Handles incomming HTTP (API) request
+     * 
+     * @param {*} req received request object
+     * @param {*} res response object to return
+     */
     handleRequest(req, res) {
         const url = new URL(req.url, `http://${req.headers.host}`);
         const params = new URLSearchParams(url.search);
@@ -28,8 +44,11 @@ class Server {
         });
 
         res.end(BLUE_TEXT + message);
-        }
-
+    }
+    
+    /**
+     * Listens for the accepted port
+     */
     start() {
         this.server.listen(this.port, () => {
             console.log(`Server is running on port ${this.port}`);
