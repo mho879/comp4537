@@ -16,5 +16,9 @@
       "source": "/api/lab3/server",
       "destination": "/api/lab3/server.js"
     }
+  ],
+  "version": 2,
+  "routes": [
+    { "src": "/api/getDate", "dest": "/api/lab3/server.js" }
   ]
 }

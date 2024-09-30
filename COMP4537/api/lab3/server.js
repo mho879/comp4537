@@ -59,7 +59,8 @@ class Server {
 const server = new Server('en');
 // Export a function to handle requests
 module.exports = (req, res) => {
-    server.handleRequest(req, res);
+    // server.handleRequest(req, res);
+    res.status(200).json({ message: 'Hello, world!' });
 };
 
 // const myServer = new Server('en');
