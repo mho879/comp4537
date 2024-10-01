@@ -79,7 +79,7 @@ class ReadServer {
      */
     readFromS3(fileName, res) {
         const params = {
-            Bucket: 'comp4537-lab3-mho', // Replace with your S3 bucket name
+            Bucket: 'comp4537-lab3-mho',
             Key: fileName
         };
 
