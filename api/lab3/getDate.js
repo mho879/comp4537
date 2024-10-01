@@ -40,6 +40,7 @@ class Server {
 
         res.writeHead(200, {
             'Content-Type': 'text/html;',
+            'Access-Control-Allow-Origin': "*"
         });
 
         res.end(BLUE_TEXT + message);
