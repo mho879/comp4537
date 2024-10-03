@@ -19,6 +19,10 @@
     {
       "source": "/COMP4537/labs/4",
       "destination": "/labs/4/frontend/index.html"
+    },
+    {
+      "source": "/COMP4537/labs/5",
+      "destination": "/labs/5/frontend/index.html"
     }
   ]
 }
