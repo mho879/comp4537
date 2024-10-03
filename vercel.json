@@ -15,6 +15,10 @@
     {
       "source": "/api/lab3/readFile/(.*)",
       "destination": "/api/lab3/readFile.js"
+    },
+    {
+      "source": "/COMP4537/labs/4/index",
+      "destination": "/labs/3/index.html"
     }
   ]
 }
